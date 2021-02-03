@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +19,6 @@ namespace sample2_WinForm
         //current Label was choosen
         LabelBean curLabelBean;
         //stop paint event again
-        //TODO Tets, can remove
         int colMarginDefault = 85;
 
         public Form1()
@@ -120,7 +119,6 @@ namespace sample2_WinForm
 
         private void displayPosition(Graphics graphics, int x, int y, bool isClick)
         {
-            
             //graphics.Clear(Color.White);
             Size sz = pictureBox1.ClientSize;
             Size oldSz = pictureBox2.ClientSize;
@@ -191,8 +189,7 @@ namespace sample2_WinForm
                         borderColor = Color.Red;
                         curLabelBean = lbChoose;
                     }
-                    //TODO Test, can remove
-                    drawRectangleAsLabel(graphics, lbChoose.Text, (int) xPos, (int) yPos, (int) width, (int) height,
+                    drawRectangleAsLabel(graphics, lbChoose.Text, (int)xPos, (int)yPos, (int)width, (int)height,
                         lbChoose.TextCorlor, borderColor, lbChoose.BackgroundCorlor, lbChoose.Rotate, lbChoose.Col);
                 }
                 //drawDataForDisplaying(bmp);
@@ -210,7 +207,7 @@ namespace sample2_WinForm
 
             //calculate delta for pointer was choosen to be belong to on old coordinates
             float newX = xPos * deltaX;
-            newX  += (label.Col * colMarginDefault) * deltaX;
+            newX += (label.Col * colMarginDefault) * deltaX;
             float newY = yPos * deltaY;
             float newWidth = newX + (width * deltaX);
             float newHeight = newY + (height * deltaY);
@@ -224,25 +221,13 @@ namespace sample2_WinForm
             }
             return false;
         }
+
         private void drawDataForDisplaying(Bitmap bmp)
         {
-            //pictureBox2.Image = bmp;
-            //pictureBox1.Image = pictureBox2.Image;
-            //pictureBox1.Image = bmp;
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            //if (isLoad == false)
-            //{
-            //    return;
-            //}
-            //isLoad = false;
-
-            //TODO Test
-            //Bitmap bmp = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            //Bitmap bmp = new Bitmap(700, 250);
-            //Graphics graphics = Graphics.FromImage(bmp);
             Graphics graphics = null;
             if (e != null)
             {
@@ -254,9 +239,6 @@ namespace sample2_WinForm
             }
             graphics.Clear(Color.White);
             Invalidate();
-            //graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            //graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-            //graphics.InterpolationMode = InterpolationMode.High;
             Size sz = pictureBox1.ClientSize;
             Size oldSz = pictureBox2.ClientSize;
 
@@ -285,7 +267,6 @@ namespace sample2_WinForm
                     labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col);
                 mapCoordinates.Add(oldX + labelBean.Col * colMarginDefault + ", " + y, labelBean);
             }
-            //graphics.Dispose();
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -301,11 +282,6 @@ namespace sample2_WinForm
         {
             pictureBox1_Paint(sender, null);
         }
-
-        //private void Form1_Paint(object sender, PaintEventArgs e)
-        //{
-
-        //}
 
         private void Form1_Resize(object sender, EventArgs e)
         {
