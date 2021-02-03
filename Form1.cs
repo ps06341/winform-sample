@@ -22,7 +22,7 @@ namespace win_form
             InitializeComponent();
         }
 
-        private void drawRectangleAsLabel(Graphics graphics, string text, int x, int y, int w, int h, Color textColor, Color borderColor, Color backgroundColor, bool isVertical)
+        private void drawRectangleAsLabel(ref Bitmap bmp, Graphics graphics, string text, int x, int y, int w, int h, Color textColor, Color borderColor, Color backgroundColor, bool isVertical)
         {
             Pen pen = new Pen(borderColor, 6.0f);
             SolidBrush sb = new SolidBrush(backgroundColor);
@@ -45,8 +45,8 @@ namespace win_form
                 drawFormat.LineAlignment= StringAlignment.Center;
                 //graphics.TranslateTransform(myRectangle.X, myRectangle.Y);
                 //graphics.TranslateTransform(-17, 113);
-                graphics.TranslateTransform(0, 0);
-                graphics.RotateTransform(45);
+                graphics.TranslateTransform(bmp.Width, 0);
+                graphics.RotateTransform(90);
             }
 
             graphics.DrawString(text, new Font("Arial", fontSize), sbText, x, y, drawFormat);
@@ -76,7 +76,7 @@ namespace win_form
                 bool isOut = checkPointerIsOutLabels(x, y, labelBean);
                 if (isOut == true)
                 {
-                    drawRectangleAsLabel(graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
                     continue;
                 }
 
@@ -84,15 +84,15 @@ namespace win_form
                 {
                     if (labelBean == curLabelBean)
                     {
-                        drawRectangleAsLabel(graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+                        drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
                         curLabelBean = null;
                     }
                     else
                     {
-                        drawRectangleAsLabel(graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Red, labelBean.BackgroundCorlor, labelBean.isVertical);
+                        drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Red, labelBean.BackgroundCorlor, labelBean.isVertical);
                         if (curLabelBean != null)
                         {
-                            drawLabel(graphics, curLabelBean);
+                            drawLabel(ref bmp, graphics, curLabelBean);
                         }
                         curLabelBean = labelBean;
                     }
@@ -103,15 +103,15 @@ namespace win_form
 
                 if (labelBean == curLabelBeanHover)
                 {
-                    drawRectangleAsLabel(graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
                     curLabelBeanHover = null;
                 }
                 else
                 {
-                    drawRectangleAsLabel(graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, Color.Green, labelBean.isVertical);
+                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, Color.Green, labelBean.isVertical);
                     if (curLabelBeanHover != null)
                     {
-                        drawLabel(graphics, curLabelBeanHover);
+                        drawLabel(ref bmp, graphics, curLabelBeanHover);
                     }
                     curLabelBeanHover = labelBean;
                 }
@@ -145,7 +145,7 @@ namespace win_form
             return false;
         }
 
-        private void drawLabel(Graphics graphics, LabelBean labelBean)
+        private void drawLabel(ref Bitmap bmp, Graphics graphics, LabelBean labelBean)
         {
             int[] curPositions = CommonFunction.getValuesAsPair(labelBean.Position);
             int xCurPos = curPositions[0];
@@ -153,7 +153,7 @@ namespace win_form
             int[] curSizes = CommonFunction.getValuesAsPair(labelBean.Size);
             int curWidth = curSizes[0];
             int curHeight = curSizes[1];
-            drawRectangleAsLabel(graphics, labelBean.Text, xCurPos, yCurPos, curWidth, curHeight, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+            drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xCurPos, yCurPos, curWidth, curHeight, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -180,7 +180,7 @@ namespace win_form
                 int[] sizes = CommonFunction.getValuesAsPair(labelBean.Size);
                 int width = sizes[0];
                 int height = sizes[1];
-                drawRectangleAsLabel(graphics, labelBean.Text, x, y, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+                drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, x, y, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
                 pictureBox2.Image = bmp;
                 pictureBox1.Image = pictureBox2.Image;
                 mapCoordinates.Add(labelBean.Position, labelBean);
