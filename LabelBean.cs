@@ -11,20 +11,20 @@ namespace win_form
         public string Text { get; set; }
         public string Position { get; set; }
         public string Size { get; set; }
-        public bool isVertical { get; set; }
+        public int Rotate { get; set; }
+        public int Col { get; set; }
         public Color TextCorlor { get; set; }
         public Color BackgroundCorlor { get; set; }
-        public Color BorderCorlor { get; set; }
 
-        public LabelBean(string text, string position, string size, bool isVertical, Color textCorlor, Color backgroundCorlor, Color borderCorlor)
+        public LabelBean(string text, string position, Color textCorlor, Color backgroundCorlor, string size, int rotate, int col)
         {
-            Text = text;
-            Position = position;
-            Size = size;
-            this.isVertical = isVertical;
-            TextCorlor = textCorlor;
-            BackgroundCorlor = backgroundCorlor;
-            BorderCorlor = borderCorlor;
+            this.Text = text;
+            this.Position = position;
+            this.Size = size;
+            this.TextCorlor = textCorlor;
+            this.BackgroundCorlor = backgroundCorlor;
+            this.Rotate = rotate;
+            this.Col = col;
         }
     }
 }

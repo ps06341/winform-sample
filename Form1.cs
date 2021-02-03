@@ -3,26 +3,32 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using win_form;
 
-namespace win_form
+namespace sample2_WinForm
 {
     public partial class Form1 : Form
     {
-        Dictionary<string, LabelBean> mapCoordinates = new Dictionary<string, LabelBean>();
+        Dictionary<string, win_form.LabelBean> mapCoordinates = new Dictionary<string, LabelBean>();
+        //current Label was choosen
         LabelBean curLabelBean;
-        LabelBean curLabelBeanHover;
-        float oldWidthSize = 1f;
-        float oldHeightSize = 1f;
-        bool isLoad = true;
+        //stop paint event again
+        //TODO Tets, can remove
+        int colMarginDefault = 85;
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void drawRectangleAsLabel(ref Bitmap bmp, Graphics graphics, string text, int x, int y, int w, int h, Color textColor, Color borderColor, Color backgroundColor, bool isVertical)
+        private void drawRectangleAsLabel(Graphics graphics, string text, int x, int y, int w, int h,
+            Color textColor, Color borderColor, Color backgroundColor, int rotate, int col)
         {
             Pen pen = new Pen(borderColor, 6.0f);
             SolidBrush sb = new SolidBrush(backgroundColor);
@@ -33,23 +39,78 @@ namespace win_form
             graphics.DrawRectangle(pen, myRectangle);
             //draw background
             graphics.FillRectangle(sb, x, y, w, h);
-            int fontSize = 10;
+            float fontSize = 28;
 
             //draw text
             System.Drawing.StringFormat drawFormat = new System.Drawing.StringFormat();
-            if (isVertical == true)
+            SizeF stringSize = new SizeF();
+            string fontName = "sans-serif";
+            Font font = new Font(fontName, fontSize);
+            stringSize = graphics.MeasureString(text, font);
+
+            //get font size by text length
+            float rectangleTextWidth = w;
+            float rectangleTextHeight = h;
+            if (rotate != 0)
             {
-                fontSize = 7;
-                //drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;.
-                drawFormat.Alignment = StringAlignment.Center;
-                drawFormat.LineAlignment= StringAlignment.Center;
-                //graphics.TranslateTransform(myRectangle.X, myRectangle.Y);
-                //graphics.TranslateTransform(-17, 113);
-                graphics.TranslateTransform(bmp.Width, 0);
-                graphics.RotateTransform(90);
+                rectangleTextWidth = h;
+                rectangleTextHeight = w;
             }
 
-            graphics.DrawString(text, new Font("Arial", fontSize), sbText, x, y, drawFormat);
+            while (stringSize.Width >= rectangleTextWidth)
+            {
+                fontSize -= 0.5f;
+                if (fontSize <= 0)
+                {
+                    font = new Font(fontName, 0.5f);
+                    break;
+                }
+                font = new Font(fontName, fontSize);
+                stringSize = graphics.MeasureString(text, font);
+            }
+
+            while (stringSize.Height >= rectangleTextHeight)
+            {
+                fontSize -= 0.5f;
+                if (fontSize <= 0)
+                {
+                    font = new Font(fontName, 0.5f);
+                    break;
+                }
+                font = new Font(fontName, fontSize);
+                stringSize = graphics.MeasureString(text, font);
+            }
+
+            drawFormat.Alignment = StringAlignment.Far;
+            drawFormat.LineAlignment = StringAlignment.Far;
+
+            //rotate for text
+            float strXPos = x + h + stringSize.Width / 2;
+            float strYPos = y + w / 2;
+            if (rotate != 0)
+            {
+                drawFormat.Alignment = StringAlignment.Near;
+                drawFormat.LineAlignment = StringAlignment.Near;
+                if (rotate == 270)
+                {
+                    graphics.TranslateTransform(x + w / 4, y + h);
+                }
+                else if (rotate == 180)
+                {
+                    //graphics.TranslateTransform(x + w / 4, y + h - 3);
+                }
+                else if (rotate == 90)
+                {
+                    graphics.TranslateTransform(x + w / 4 * 3, y + 3);
+                }
+
+                graphics.RotateTransform(rotate);
+
+                strXPos = 0;
+                strYPos = 0;
+            }
+
+            graphics.DrawString(text, font, sbText, strXPos, strYPos, drawFormat);
 
             graphics.ResetTransform();
             pen.Dispose();
@@ -57,70 +118,88 @@ namespace win_form
             sbText.Dispose();
         }
 
-        private void displayPosition(int x, int y, bool isClick)
+        private void displayPosition(Graphics graphics, int x, int y, bool isClick)
         {
-            Bitmap bmp = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            Graphics graphics = Graphics.FromImage(bmp);
+            
+            //graphics.Clear(Color.White);
+            Size sz = pictureBox1.ClientSize;
+            Size oldSz = pictureBox2.ClientSize;
+
+            LabelBean lbChoose = null;
+            float xPos = 0;
+            float yPos = 0;
+            float width = 0;
+            float height = 0;
+            float deltaX = (float)sz.Width / (float)oldSz.Width;
+            float deltaY = (float)sz.Height / (float)oldSz.Height;
+
             foreach (var label in mapCoordinates)
             {
                 string position = label.Key;
                 LabelBean labelBean = label.Value;
 
                 int[] positions = CommonFunction.getValuesAsPair(labelBean.Position);
-                int xPos = positions[0];
-                int yPos = positions[1];
+                xPos = positions[0];
+                yPos = positions[1];
                 int[] sizes = CommonFunction.getValuesAsPair(labelBean.Size);
-                int width = sizes[0];
-                int height = sizes[1];
+                width = sizes[0];
+                height = sizes[1];
 
-                bool isOut = checkPointerIsOutLabels(x, y, labelBean);
+                xPos *= deltaX;
+                xPos += (labelBean.Col * colMarginDefault) * deltaX;
+                yPos *= deltaY;
+                width *= deltaX;
+                height *= deltaY;
+
+                //check current pointer is belong to label
+                bool isOut = checkPointerIsOutLabels(x, y, deltaX, deltaY, labelBean);
                 if (isOut == true)
                 {
-                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+                    drawRectangleAsLabel(graphics, labelBean.Text, (int)xPos, (int)yPos, (int)width, (int)height, labelBean.TextCorlor, Color.Black,
+                        labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col);
                     continue;
                 }
+                lbChoose = labelBean;
+            }
+
+            if (lbChoose != null)
+            {
+                int[] positions = CommonFunction.getValuesAsPair(lbChoose.Position);
+                xPos = positions[0];
+                yPos = positions[1];
+                int[] sizes = CommonFunction.getValuesAsPair(lbChoose.Size);
+                width = sizes[0];
+                height = sizes[1];
+
+                xPos *= deltaX;
+                xPos += (lbChoose.Col * colMarginDefault) * deltaX;
+                yPos *= deltaY;
+                width *= deltaX;
+                height *= deltaY;
 
                 if (isClick == true)
                 {
-                    if (labelBean == curLabelBean)
+                    //case: label pointer was choosen => do nothing
+                    Color borderColor = Color.Black;
+                    if (lbChoose == curLabelBean)
                     {
-                        drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
                         curLabelBean = null;
                     }
                     else
                     {
-                        drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Red, labelBean.BackgroundCorlor, labelBean.isVertical);
-                        if (curLabelBean != null)
-                        {
-                            drawLabel(ref bmp, graphics, curLabelBean);
-                        }
-                        curLabelBean = labelBean;
+                        //case: label pointer different than label pointer was choosen => do something
+                        borderColor = Color.Red;
+                        curLabelBean = lbChoose;
                     }
-                    pictureBox2.Image = bmp;
-                    pictureBox1.Image = pictureBox2.Image;
-                    continue;
+                    //TODO Test, can remove
+                    drawRectangleAsLabel(graphics, lbChoose.Text, (int) xPos, (int) yPos, (int) width, (int) height,
+                        lbChoose.TextCorlor, borderColor, lbChoose.BackgroundCorlor, lbChoose.Rotate, lbChoose.Col);
                 }
-
-                if (labelBean == curLabelBeanHover)
-                {
-                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
-                    curLabelBeanHover = null;
-                }
-                else
-                {
-                    drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xPos, yPos, width, height, labelBean.TextCorlor, Color.Black, Color.Green, labelBean.isVertical);
-                    if (curLabelBeanHover != null)
-                    {
-                        drawLabel(ref bmp, graphics, curLabelBeanHover);
-                    }
-                    curLabelBeanHover = labelBean;
-                }
-                pictureBox2.Image = bmp;
-                pictureBox1.Image = pictureBox2.Image;
+                //drawDataForDisplaying(bmp);
+                return;
             }
         }
-
-        private bool checkPointerIsOutLabels(int Ox, int Oy, LabelBean label)
+        private bool checkPointerIsOutLabels(int Ox, int Oy, float deltaX, float deltaY, LabelBean label)
         {
             int[] positions = CommonFunction.getValuesAsPair(label.Position);
             int xPos = positions[0];
@@ -129,13 +208,14 @@ namespace win_form
             int width = sizes[0];
             int height = sizes[1];
 
-            float deltaX = (pictureBox1.Size.Width / oldWidthSize);
-            float deltaY = (pictureBox1.Size.Height / oldHeightSize);
+            //calculate delta for pointer was choosen to be belong to on old coordinates
             float newX = xPos * deltaX;
+            newX  += (label.Col * colMarginDefault) * deltaX;
             float newY = yPos * deltaY;
             float newWidth = newX + (width * deltaX);
             float newHeight = newY + (height * deltaY);
 
+            //if out onyl one => not to be belong to label's old coordinates
             bool isOutX = Ox < newX || Ox > newWidth;
             bool isOutY = Oy < newY || Oy > newHeight;
             if (isOutX == true || isOutY == true)
@@ -144,48 +224,68 @@ namespace win_form
             }
             return false;
         }
-
-        private void drawLabel(ref Bitmap bmp, Graphics graphics, LabelBean labelBean)
+        private void drawDataForDisplaying(Bitmap bmp)
         {
-            int[] curPositions = CommonFunction.getValuesAsPair(labelBean.Position);
-            int xCurPos = curPositions[0];
-            int yCurPos = curPositions[1];
-            int[] curSizes = CommonFunction.getValuesAsPair(labelBean.Size);
-            int curWidth = curSizes[0];
-            int curHeight = curSizes[1];
-            drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, xCurPos, yCurPos, curWidth, curHeight, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
+            //pictureBox2.Image = bmp;
+            //pictureBox1.Image = pictureBox2.Image;
+            //pictureBox1.Image = bmp;
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            if (isLoad == false)
-            {
-                return;
-            }
-            isLoad = false;
+            //if (isLoad == false)
+            //{
+            //    return;
+            //}
+            //isLoad = false;
 
-            Bitmap bmp = new Bitmap(pictureBox2.Width, pictureBox2.Height);
-            Graphics graphics = Graphics.FromImage(bmp);
-            Size sz = pictureBox2.ClientSize;
-            oldWidthSize = sz.Width;
-            oldHeightSize = sz.Height;
+            //TODO Test
+            //Bitmap bmp = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+            //Bitmap bmp = new Bitmap(700, 250);
+            //Graphics graphics = Graphics.FromImage(bmp);
+            Graphics graphics = null;
+            if (e != null)
+            {
+                graphics = e.Graphics;
+            }
+            else
+            {
+                graphics = pictureBox1.CreateGraphics();
+            }
+            graphics.Clear(Color.White);
+            Invalidate();
+            //graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            //graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+            //graphics.InterpolationMode = InterpolationMode.High;
+            Size sz = pictureBox1.ClientSize;
+            Size oldSz = pictureBox2.ClientSize;
 
             mapCoordinates = new Dictionary<string, LabelBean>();
             List<LabelBean> labelBeans = CommonFunction.getListLabel();
             foreach (LabelBean labelBean in labelBeans)
             {
                 int[] positions = CommonFunction.getValuesAsPair(labelBean.Position);
-                int x = positions[0];
-                int y = positions[1];
+                float x = positions[0];
+                float y = positions[1];
                 int[] sizes = CommonFunction.getValuesAsPair(labelBean.Size);
-                int width = sizes[0];
-                int height = sizes[1];
-                drawRectangleAsLabel(ref bmp, graphics, labelBean.Text, x, y, width, height, labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.isVertical);
-                pictureBox2.Image = bmp;
-                pictureBox1.Image = pictureBox2.Image;
-                mapCoordinates.Add(labelBean.Position, labelBean);
+                float width = sizes[0];
+                float height = sizes[1];
+
+                float deltaX = (float)sz.Width / (float)oldSz.Width;
+                float deltaY = (float)sz.Height / (float)oldSz.Height;
+
+                float oldX = x;
+                x *= deltaX;
+                x += (labelBean.Col * colMarginDefault) * deltaX;
+                y *= deltaY;
+                width *= deltaX;
+                height *= deltaY;
+
+                drawRectangleAsLabel(graphics, labelBean.Text, (int)x, (int)y, (int)width, (int)height,
+                    labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col);
+                mapCoordinates.Add(oldX + labelBean.Col * colMarginDefault + ", " + y, labelBean);
             }
-            graphics.Dispose();
+            //graphics.Dispose();
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -193,12 +293,23 @@ namespace win_form
             Point p = new Point(e.X, e.Y);
             int x = p.X;
             int y = p.Y;
-            displayPosition(x, y, true);
+            Graphics graphics = pictureBox1.CreateGraphics();
+            displayPosition(graphics, x, y, true);
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void pictureBox1_Resize(object sender, EventArgs e)
         {
+            pictureBox1_Paint(sender, null);
+        }
 
+        //private void Form1_Paint(object sender, PaintEventArgs e)
+        //{
+
+        //}
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            Invalidate();
         }
     }
 }
