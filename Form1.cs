@@ -366,7 +366,7 @@ Color textColor, Color borderColor, Color backgroundColor, float rotate, int col
                     //}
 
                     float newX = x + (labelBean.Col * colMarginDefault);
-                    float[] resizeCoordinate = CommonFunction.getResizingPostion(sz, oldSz, newX, y, width, height, 4.0f);
+                    float[] resizeCoordinate = CommonFunction.getResizingPostion(sz, oldSz, newX, y, width, height, 2.0f);
 
                     Color color = Color.Black;
                     if (isOdd == false)

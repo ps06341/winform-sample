@@ -77,20 +77,20 @@ namespace sample2_WinForm
             //labels.Add(new LabelBean("1", "50, 10", System.Drawing.Color.Black, System.Drawing.Color.White, "150, 35", 0, 3));
             //labels.Add(new LabelBean("2", "65, 48", System.Drawing.Color.Black, System.Drawing.Color.White, "35, 50", 0, 3));
 
-            labels.Add(new LabelBean("1", "49, 4", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("11", "65, 23", System.Drawing.Color.White, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
-            labels.Add(new LabelBean("9337", "49, 55", System.Drawing.Color.Blue, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("山口", "81, 55", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
-            labels.Add(new LabelBean("よろし口", "65, 74", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
-            labels.Add(new LabelBean("2130", "81, 87", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("2101", "49, 106", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("よろろ", "81, 106", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
-            labels.Add(new LabelBean("ろし口", "65, 125", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
-            labels.Add(new LabelBean("5237", "81, 138", System.Drawing.Color.Blue, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("2170", "49, 157", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
-            labels.Add(new LabelBean("口山口山", "81, 157", System.Drawing.Color.Red, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
-            labels.Add(new LabelBean("ろし", "65, 176", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
-            labels.Add(new LabelBean("2565", "81, 189", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("1", "49, 6", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("11", "65, 24", System.Drawing.Color.White, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
+            labels.Add(new LabelBean("9337", "49, 54", System.Drawing.Color.Blue, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("山口", "81, 54", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
+            labels.Add(new LabelBean("よろし口", "65, 72", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
+            labels.Add(new LabelBean("2130", "81, 84", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("2101", "49, 102", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("よろろ", "81, 102", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
+            labels.Add(new LabelBean("ろし口", "65, 120", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
+            labels.Add(new LabelBean("5237", "81, 133", System.Drawing.Color.Blue, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("2170", "49, 150", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
+            labels.Add(new LabelBean("口山口山", "81, 151", System.Drawing.Color.Red, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 270, 0));
+            labels.Add(new LabelBean("ろし", "65, 168", System.Drawing.Color.Black, System.Drawing.Color.FromArgb(221, 160, 221), "14, 30", 90, 0));
+            labels.Add(new LabelBean("2565", "81, 181", System.Drawing.Color.Black, System.Drawing.Color.White, "30, 17", 0, 0));
             labels.Add(new LabelBean("9200", "65, 250", System.Drawing.Color.Blue, System.Drawing.Color.White, "14, 30", 270, 0));
 
             return labels;
