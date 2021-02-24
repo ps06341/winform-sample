@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using win_form;
 
 namespace sample2_WinForm
 {
@@ -18,6 +19,7 @@ namespace sample2_WinForm
         LabelBean curLabelBean;
         //stop paint event again
         int colMarginDefault = 85;
+        int deltaY1 = 1;
         int heightLabelNameDefault = 20;
         int curY = -1;
         bool isDraw = true;
@@ -28,29 +30,32 @@ namespace sample2_WinForm
             InitializeComponent();
         }
 
-        private void drawRectangleAsChair(Graphics graphics, string text, int x, int y, int w, int h,
-            Color textColor, Color borderColor, Color backgroundColor, int rotate, int col)
+        private void drawRectangleAsChair(Graphics graphics, string text, float x, float y, float w, float h,
+            Color textColor, Color borderColor, Color backgroundColor, float rotate, int col, float penWidth)
         {
             this.drawRectangleDefault(graphics, text, x, y, w, h, textColor, borderColor,
-                        backgroundColor, rotate, col, FontStyle.Bold, true, 16, true);
+                        backgroundColor, rotate, col, FontStyle.Bold, true, 16, true, penWidth);
         }
-        private void drawRectangleAsNameMenu(Graphics graphics, string text, int x, int y, int w, int h,
-                    Color textColor, Color borderColor, Color backgroundColor, int rotate, int col)
+        private void drawRectangleAsNameMenu(Graphics graphics, string text, float x, float y, float w, float h,
+                    Color textColor, Color borderColor, Color backgroundColor, float rotate, int col)
         {
             this.drawRectangleDefault(graphics, text, x, y, w, h, textColor, borderColor,
-                        backgroundColor, rotate, col, FontStyle.Regular, false, 12, true);
+                        backgroundColor, rotate, col, FontStyle.Regular, false, 12, true, 4.0f);
         }
 
-        private void drawRectangleDefault(Graphics graphics, string text, int x, int y, int w, int h,
-Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, FontStyle fontStyle, bool calPosition, int defaultFontSize, bool isCenter)
+        private void drawRectangleDefault(Graphics graphics, string text, float x, float y, float w, float h,
+Color textColor, Color borderColor, Color backgroundColor, float rotate, int col, FontStyle fontStyle, bool calPosition, int defaultFontSize, bool isCenter, float penWidth)
         {
-            Pen pen = new Pen(borderColor, 4.0f);
+            //text = y + ", " + h;
+            Pen pen = new Pen(borderColor, penWidth);
             SolidBrush sb = new SolidBrush(backgroundColor);
             SolidBrush sbText = new SolidBrush(textColor);
 
-            Rectangle myRectangle = new Rectangle(x, y, w, h);
-            //draw rectangle
-            graphics.DrawRectangle(pen, myRectangle);
+            //Rectangle myRectangle = new Rectangle(x, y, w, h);
+            ////draw rectangle
+            //graphics.DrawRectangle(pen, myRectangle);
+            graphics.DrawRectangle(pen, x, y, w, h);
+
             //draw background
             graphics.FillRectangle(sb, x, y, w, h);
             float fontSize = defaultFontSize;
@@ -112,40 +117,40 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
 
             //rotate for text
             if (rotate != 0)
-            {
-                strXPos = 0;
-                strYPos = 0;
-                drawFormat.Alignment = StringAlignment.Near;
-                drawFormat.LineAlignment = StringAlignment.Near;
-                if (rotate == 270)
                 {
-                    if (isCenter == true)
+                    strXPos = 0;
+                    strYPos = 0;
+                    drawFormat.Alignment = StringAlignment.Near;
+                    drawFormat.LineAlignment = StringAlignment.Near;
+                    if (rotate == 270)
                     {
-                        graphics.TranslateTransform(x + w / 4, y + (float)h / 2 + ((float)stringSize.Width / 2));
+                        if (isCenter == true)
+                        {
+                            graphics.TranslateTransform(x + w / 4, y + (float)h / 2 + ((float)stringSize.Width / 2));
+                        }
+                        else
+                        {
+                            graphics.TranslateTransform(x, y + stringSize.Width);
+                        }
                     }
-                    else
+                    else if (rotate == 180)
                     {
-                        graphics.TranslateTransform(x, y + stringSize.Width);
+                        //graphics.TranslateTransform(x + w / 4, y + h - 3);
                     }
-                }
-                else if (rotate == 180)
-                {
-                    //graphics.TranslateTransform(x + w / 4, y + h - 3);
-                }
-                else if (rotate == 90)
-                {
-                    if (isCenter == true)
+                    else if (rotate == 90)
                     {
-                        graphics.TranslateTransform(x + (float)w / 2 + (float)stringSize.Height / 4, ((float)h / 2) + y - ((float)stringSize.Width / 2));
+                        if (isCenter == true)
+                        {
+                            graphics.TranslateTransform(x + (float)w / 2 + (float)stringSize.Height / 4, ((float)h / 2) + y - ((float)stringSize.Width / 2));
+                        }
+                        else
+                        {
+                            graphics.TranslateTransform(x + stringSize.Height, y);
+                        }
                     }
-                    else
-                    {
-                        graphics.TranslateTransform(x + stringSize.Height, y);
-                    }
-                }
 
-                graphics.RotateTransform(rotate);
-            }
+                    graphics.RotateTransform(rotate);
+                }
 
             graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
             graphics.DrawString(text, font, sbText, strXPos, strYPos, drawFormat);
@@ -158,9 +163,6 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
 
         private void displayPosition(Graphics graphics, Dictionary<string, object> datas, int x, int y, bool isClick, Size sz, Size oldSz)
         {
-            //Size sz = pictureBox1.ClientSize;
-            //Size oldSz = pictureBox2.ClientSize;
-
             LabelBean lbChoose = null;
             int nameY = 0;
             float xPos = 0;
@@ -168,9 +170,9 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
             float width = 0;
             float height = 0;
             float deltaX = (float)sz.Width / (float)oldSz.Width;
-            deltaX = CommonFunction.roundValue(deltaX);
+            //deltaX = CommonFunction.roundValue(deltaX);
             float deltaY = (float)sz.Height / (float)oldSz.Height;
-            deltaY = CommonFunction.roundValue(deltaY);
+            //deltaY = CommonFunction.roundValue(deltaY);
             string position = "0, 0";
             string size = "0, 0";
             int col = 0;
@@ -222,7 +224,7 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                     if (drawChair == true)
                     {
                         drawRectangleAsChair(graphics, labelBean.Text, (int)xPos, (int)yPos, (int)width, (int)height, labelBean.TextCorlor, Color.Black,
-                            labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col);
+                            labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col, 4.0f);
                     }
                     else
                     {
@@ -283,7 +285,7 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                         curLabelBean = lbChoose;
                     }
                     drawRectangleAsChair(graphics, lbChoose.Text, (int)xPos, (int)yPos, (int)width, (int)height,
-                        lbChoose.TextCorlor, borderColor, lbChoose.BackgroundCorlor, lbChoose.Rotate, lbChoose.Col);
+                        lbChoose.TextCorlor, borderColor, lbChoose.BackgroundCorlor, lbChoose.Rotate, lbChoose.Col, 4.0f);
                 }
                 //drawDataForDisplaying(bmp);
                 return;
@@ -340,12 +342,15 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
             Dictionary<string, object> mapCoordinatesChairTemp = new Dictionary<string, object>();
             bool isError = false;
             float deltaX = (float)sz.Width / (float)oldSz.Width;
-            deltaX = CommonFunction.roundValue(deltaX);
+            //deltaX = CommonFunction.roundValue(deltaX);
             float deltaY = (float)sz.Height / (float)oldSz.Height;
-            deltaY = CommonFunction.roundValue(deltaY);
+            //deltaY = CommonFunction.roundValue(deltaY);
             try
             {
                 List<LabelBean> labelBeans = CommonFunction.getListLabel();
+                //bool addBorderWidth = false;
+                //int countCol = 0;
+                bool isOdd = true;
                 foreach (LabelBean labelBean in labelBeans)
                 {
                     int[] positions = CommonFunction.getValuesAsPair(labelBean.Position);
@@ -355,16 +360,35 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                     float width = sizes[0];
                     float height = sizes[1];
 
-                    float oldX = x;
-                    x *= deltaX;
-                    x += (labelBean.Col * colMarginDefault) * deltaX;
-                    y *= deltaY;
-                    width *= deltaX;
-                    height *= deltaY;
+                    //if (addBorderWidth == true)
+                    //{
+                    //    y += 4.0f;
+                    //}
 
-                    drawRectangleAsChair(graphics, labelBean.Text, (int)x, (int)y, (int)width, (int)height,
-                        labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col);
-                    mapCoordinatesChairTemp.Add(oldX + labelBean.Col * colMarginDefault + ", " + y, labelBean);
+                    float newX = x + (labelBean.Col * colMarginDefault);
+                    float[] resizeCoordinate = CommonFunction.getResizingPostion(sz, oldSz, newX, y, width, height, 4.0f);
+
+                    Color color = Color.Black;
+                    if (isOdd == false)
+                    {
+                        color = Color.Red;
+                    }
+
+                    drawRectangleAsChair(graphics, labelBean.Text, resizeCoordinate[0], resizeCoordinate[1], resizeCoordinate[2], resizeCoordinate[3],
+                        labelBean.TextCorlor, color, labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col, resizeCoordinate[4]);
+                    mapCoordinatesChairTemp.Add(x + labelBean.Col * colMarginDefault + ", " + y, labelBean);
+
+                    //if (labelBean.Col > countCol)
+                    //{
+                    //    countCol = labelBean.Col;
+                    //    addBorderWidth = false;
+                    //}
+                    //else if (labelBean.Col == countCol)
+                    //{
+                    //    addBorderWidth = true;
+                    //}
+
+                    //isOdd = !isOdd;
                 }
             }
             catch (Exception ex)
@@ -386,14 +410,11 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                 float width = sizes[0];
                 float height = sizes[1];
 
-                x *= deltaX;
-                x += (curLabelBean.Col * colMarginDefault) * deltaX;
-                y *= deltaY;
-                width *= deltaX;
-                height *= deltaY;
+                float newX = x + (curLabelBean.Col * colMarginDefault);
+                float[] resizeCoordinate = CommonFunction.getResizingPostion(sz, oldSz, newX, y, width, height);
 
-                drawRectangleAsChair(graphics, curLabelBean.Text, (int)x, (int)y, (int)width, (int)height,
-                        curLabelBean.TextCorlor, Color.Red, curLabelBean.BackgroundCorlor, curLabelBean.Rotate, curLabelBean.Col);
+                drawRectangleAsChair(graphics, curLabelBean.Text, resizeCoordinate[0], resizeCoordinate[1], resizeCoordinate[2], resizeCoordinate[3],
+                        curLabelBean.TextCorlor, Color.Red, curLabelBean.BackgroundCorlor, curLabelBean.Rotate, curLabelBean.Col, 4.0f);
             }
         }
 
@@ -406,42 +427,45 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
             displayPosition(graphics, mapCoordinatesChair, x, y, true, pictureBox1.ClientSize, pictureBox2.ClientSize);
         }
 
-        private void Form1_ResizeEnd(object sender, EventArgs e)
-        {
-            isDraw = true;
-            pictureBox1_Paint(sender, null);
-            panel1_Paint(sender, null);
-        }
+        //private void Form1_ResizeEnd(object sender, EventArgs e)
+        //{
+        //    isDraw = true;
+        //    pictureBox1_Paint(sender, null);
+        //    panel1_Paint(sender, null);
+        //}
 
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            if (WindowState == FormWindowState.Minimized)
-            {
-                isDraw = true;
-                pictureBox1_Paint(sender, null);
-                panel1_Paint(sender, null);
-                return;
-            }
-            else if (WindowState == FormWindowState.Maximized)
-            {
-                isDraw = true;
-                pictureBox1_Paint(sender, null);
-                panel1_Paint(sender, null);
-                canRestoreSize = true;
-                return;
-            }
-            else if (WindowState == FormWindowState.Normal && canRestoreSize == true)
-            {
-                isDraw = true;
-                pictureBox1_Paint(sender, null);
-                panel1_Paint(sender, null);
-                canRestoreSize = false;
-                return;
-            }
-        }
+        //private void Form1_Resize(object sender, EventArgs e)
+        //{
+        //    if (WindowState == FormWindowState.Minimized)
+        //    {
+        //        isDraw = true;
+        //        pictureBox1_Paint(sender, null);
+        //        return;
+        //    }
+        //    else if (WindowState == FormWindowState.Maximized)
+        //    {
+        //        isDraw = true;
+        //        pictureBox1_Paint(sender, null);
+        //        canRestoreSize = true;
+        //        return;
+        //    }
+        //    else if (WindowState == FormWindowState.Normal && canRestoreSize == true)
+        //    {
+        //        isDraw = true;
+        //        pictureBox1_Paint(sender, null);
+        //        canRestoreSize = false;
+        //        return;
+        //    }
+        //}
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+            if (isDraw == false)
+            {
+                return;
+            }
+            isDraw = false;
+            Invalidate();
             Graphics graphics = null;
             if (e != null)
             {
@@ -452,42 +476,52 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                 graphics = panel1.CreateGraphics();
             }
             graphics.Clear(Color.White);
-            Invalidate();
             Size sz = panel1.ClientSize;
-            Size oldSz = panel2.ClientSize;
+            Size oldSz = pictureBox2.ClientSize;
 
-            Dictionary<string, object> mapCoordinatesNameTemp = new Dictionary<string, object>();
+            Dictionary<string, object> mapCoordinatesChairTemp = new Dictionary<string, object>();
             bool isError = false;
             float deltaX = (float)sz.Width / (float)oldSz.Width;
-            deltaX = CommonFunction.roundValue(deltaX);
+            //deltaX = CommonFunction.roundValue(deltaX);
             float deltaY = (float)sz.Height / (float)oldSz.Height;
-            deltaY = CommonFunction.roundValue(deltaY);
+            //deltaY = CommonFunction.roundValue(deltaY);
             try
             {
-                List<LabelBean> labelBeans = CommonFunction.getListLabel();
-                float nameY = 0;
+                List<LabelBean> labelBeans = new List<LabelBean>();
+                labelBeans.Add(new LabelBean("1", "100, 20", System.Drawing.Color.Black, System.Drawing.Color.White, "70, 50", 0, 0));
+                labelBeans.Add(new LabelBean("11", "135, 70", System.Drawing.Color.White, System.Drawing.Color.FromArgb(221, 160, 221), "50, 70", 90, 0));
+                bool addBorderWidth = false;
+                int countCol = 0;
                 foreach (LabelBean labelBean in labelBeans)
                 {
-                    if (labelBean.Text.Equals(""))
-                    {
-                        continue;
-                    }
-                    float width = sz.Width;
-                    float height = sz.Height;
-
-
-                    width *= deltaX;
-                    height *= deltaY;
-
-                    drawRectangleAsNameMenu(graphics, labelBean.Text, 0, (int)nameY, (int)width, (int)height,
-                        Color.Black, Color.Black, Color.White, 0, labelBean.Col);
-
                     int[] positions = CommonFunction.getValuesAsPair(labelBean.Position);
                     float x = positions[0];
                     float y = positions[1];
-                    y *= deltaY;
-                    mapCoordinatesNameTemp.Add(nameY + "", x + labelBean.Col * colMarginDefault + ", " + y);
-                    nameY += heightLabelNameDefault;
+                    int[] sizes = CommonFunction.getValuesAsPair(labelBean.Size);
+                    float width = sizes[0];
+                    float height = sizes[1];
+
+                    if (addBorderWidth == true)
+                    {
+                        y += 4.0f;
+                    }
+
+                    float newX = x + (labelBean.Col * colMarginDefault);
+                    float[] resizeCoordinate = CommonFunction.getResizingPostion(sz, oldSz, newX, y, width, height);
+
+                    drawRectangleAsChair(graphics, labelBean.Text, resizeCoordinate[0], resizeCoordinate[1], resizeCoordinate[2], resizeCoordinate[3],
+                        labelBean.TextCorlor, Color.Black, labelBean.BackgroundCorlor, labelBean.Rotate, labelBean.Col, 4.0f);
+                    mapCoordinatesChairTemp.Add(x + labelBean.Col * colMarginDefault + ", " + y, labelBean);
+
+                    if (labelBean.Col > countCol)
+                    {
+                        countCol = labelBean.Col;
+                        addBorderWidth = false;
+                    }
+                    else if (labelBean.Col == countCol) 
+                    {
+                        addBorderWidth = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -495,29 +529,10 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
                 isError = true;
             }
 
-            if (mapCoordinatesNameTemp.Count > 0 && isError == false)
+            if (mapCoordinatesChairTemp.Count > 0 && isError == false)
             {
-                mapCoordinatesName = mapCoordinatesNameTemp;
+                mapCoordinatesChair = mapCoordinatesChairTemp;
             }
-
-            if (curY != -1)
-            {
-                string coordinateLabelBean = (string)mapCoordinatesName[curY + ""];
-                LabelBean curLabelBean = (LabelBean)mapCoordinatesChair[coordinateLabelBean];
-                float width = deltaX * (float)oldSz.Width;
-                float height = deltaY * heightLabelNameDefault;
-                drawRectangleAsNameMenu(graphics, curLabelBean.Text, 0, (int)curY, (int)width, (int)height,
-                        Color.Black, Color.Black, Color.FromArgb(255, 239, 213), 0, curLabelBean.Col);
-            }
-        }
-
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            Point p = new Point(e.X, e.Y);
-            int x = p.X;
-            int y = p.Y;
-            Graphics graphics = panel1.CreateGraphics();
-            displayPosition(graphics, mapCoordinatesName, x, y, true, panel1.ClientSize, panel2.ClientSize);
         }
     }
 }
