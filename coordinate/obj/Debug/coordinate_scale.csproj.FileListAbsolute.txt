@@ -1,0 +1,8 @@
+C:\Users\Admin\source\repos\coordinate_scale\bin\Debug\coordinate_scale.exe
+C:\Users\Admin\source\repos\coordinate_scale\bin\Debug\coordinate_scale.pdb
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.Form1.resources
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.Properties.Resources.resources
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.exe
+C:\Users\Admin\source\repos\coordinate_scale\obj\Debug\coordinate_scale.pdb
