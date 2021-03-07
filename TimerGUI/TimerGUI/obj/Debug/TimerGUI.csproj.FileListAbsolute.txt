@@ -1,0 +1,17 @@
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\bin\Debug\TimerGUI.exe.config
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\bin\Debug\TimerGUI.exe
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\bin\Debug\TimerGUI.pdb
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\obj\Debug\TimerGUI.Form1.resources
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\obj\Debug\TimerGUI.Properties.Resources.resources
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\obj\Debug\TimerGUI.csproj.GenerateResource.Cache
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\obj\Debug\TimerGUI.exe
+D:\Project\Web\Recuirement Web HowKTeam\Git\Video hướng dẫn\Winform C#\71.Timer\TimerGUI\TimerGUI\obj\Debug\TimerGUI.pdb
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\bin\Debug\TimerGUI.exe.config
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\bin\Debug\TimerGUI.exe
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\bin\Debug\TimerGUI.pdb
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.csprojAssemblyReference.cache
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.Form1.resources
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.Properties.Resources.resources
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.csproj.GenerateResource.cache
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.exe
+E:\FPoly\Cloud\generalFolder\IMLV\winform\TimerGUI-20210305T152747Z-001\TimerGUI\TimerGUI\obj\Debug\TimerGUI.pdb
