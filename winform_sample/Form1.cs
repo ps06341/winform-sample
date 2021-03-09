@@ -58,6 +58,8 @@ Color textColor, Color borderColor, Color backgroundColor, int rotate, int col, 
 
             //draw text
             System.Drawing.StringFormat drawFormat = new System.Drawing.StringFormat();
+            //each char in line
+            //drawFormat.FormatFlags = StringFormatFlags.DirectionVertical;
             SizeF stringSize = new SizeF();
             string fontName = "sans-serif";
             Font font = new Font(fontName, fontSize, fontStyle);
